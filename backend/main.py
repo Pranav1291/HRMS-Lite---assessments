@@ -46,14 +46,14 @@ async def startup_db_client():
         await db.employees.create_index("email", unique=True)
         await db.attendance.create_index([("employee_id", 1), ("date", 1)], unique=True)
 
-@app.get("/api/employees")
+@app.get("https://hrms-lite-assessments-6.onrender.com/api/employees")
 async def get_employees():
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
     employees = await db.employees.find({}, {"_id": 0}).to_list(length=1000)
     return employees
 
-@app.post("/api/employees", status_code=201)
+@app.post("https://hrms-lite-assessments-6.onrender.com/api/employees", status_code=201)
 async def add_employee(employee: EmployeeCreate):
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
@@ -69,7 +69,7 @@ async def add_employee(employee: EmployeeCreate):
                 raise HTTPException(status_code=400, detail="Email already exists")
         raise HTTPException(status_code=500, detail="Failed to add employee")
 
-@app.delete("/api/employees/{emp_id}")
+@app.delete("https://hrms-lite-assessments-6.onrender.com/api/employees/{emp_id}")
 async def delete_employee(emp_id: str):
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
@@ -82,7 +82,7 @@ async def delete_employee(emp_id: str):
     return {"message": "Employee deleted successfully"}
 
 
-@app.get("/api/attendance")
+@app.get("https://hrms-lite-assessments-6.onrender.com/api/attendance")
 async def get_attendance():
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
@@ -115,7 +115,7 @@ async def get_attendance():
              item["id"] = str(item["id"])
     return attendance
 
-@app.get("/api/attendance/{employee_id}")
+@app.get("https://hrms-lite-assessments-6.onrender.com/api/attendance/{employee_id}")
 async def get_employee_attendance(employee_id: str):
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
@@ -123,7 +123,7 @@ async def get_employee_attendance(employee_id: str):
     return attendance
 
 
-@app.post("/api/attendance", status_code=201)
+@app.post("https://hrms-lite-assessments-6.onrender.com/api/attendance", status_code=201)
 async def mark_attendance(attendance: AttendanceMark):
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
@@ -139,7 +139,7 @@ async def mark_attendance(attendance: AttendanceMark):
         raise HTTPException(status_code=500, detail="Failed to mark attendance")
 
 
-@app.get("/api/stats")
+@app.get("https://hrms-lite-assessments-6.onrender.com/api/stats")
 async def get_stats():
     if db is None:
         raise HTTPException(status_code=500, detail="Database not configured")
