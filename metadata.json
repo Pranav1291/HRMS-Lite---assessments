@@ -1,0 +1,5 @@
+{
+  "name": "HRMS Lite",
+  "description": "A lightweight Human Resource Management System for managing employee records and tracking attendance.",
+  "requestFramePermissions": []
+}
