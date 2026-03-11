@@ -16,7 +16,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Employee, AttendanceRecord, DashboardStats } from './types';
 
 const App = () => {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+  const API_BASE_URL = 'https://hrms-lite-assessments-6.onrender.com/api'
   const [activeTab, setActiveTab] = useState<'dashboard' | 'employees' | 'attendance'>('dashboard');
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
