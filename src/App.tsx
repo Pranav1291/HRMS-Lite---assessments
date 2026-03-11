@@ -10,7 +10,9 @@ import {
   Search,
   Loader2,
   ChevronRight,
-  UserPlus
+  UserPlus,
+  Menu,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Employee, AttendanceRecord, DashboardStats } from './types';
@@ -18,6 +20,7 @@ import { Employee, AttendanceRecord, DashboardStats } from './types';
 const App = () => {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
   const [activeTab, setActiveTab] = useState<'dashboard' | 'employees' | 'attendance'>('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [stats, setStats] = useState<DashboardStats>({ totalEmployees: 0, presentToday: 0 });
@@ -108,42 +111,66 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-[#f5f5f5] text-[#1a1a1a] font-sans">
-      {/* Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-black/5 z-20 hidden md:block">
-        <div className="p-8">
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      <aside className={`fixed left-0 top-0 h-full w-64 bg-white border-r border-black/5 z-40 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white">H</div>
             HRMS Lite
           </h1>
+          <button
+            className="md:hidden p-2 -mr-2 text-muted hover:bg-black/5 rounded-lg transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X size={20} />
+          </button>
         </div>
         <nav className="px-4 space-y-2">
           <NavItem
             active={activeTab === 'dashboard'}
-            onClick={() => setActiveTab('dashboard')}
+            onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }}
             icon={<LayoutDashboard size={20} />}
             label="Dashboard"
           />
           <NavItem
             active={activeTab === 'employees'}
-            onClick={() => setActiveTab('employees')}
+            onClick={() => { setActiveTab('employees'); setIsMobileMenuOpen(false); }}
             icon={<Users size={20} />}
             label="Employees"
           />
           <NavItem
             active={activeTab === 'attendance'}
-            onClick={() => setActiveTab('attendance')}
+            onClick={() => { setActiveTab('attendance'); setIsMobileMenuOpen(false); }}
             icon={<Calendar size={20} />}
             label="Attendance"
           />
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="md:ml-64 p-4 md:p-8">
         <header className="mb-8 flex justify-between items-center">
-          <div>
-            <h2 className="text-3xl font-semibold capitalize">{activeTab}</h2>
-            <p className="text-muted text-sm mt-1">Manage your workforce efficiently.</p>
+          <div className="flex items-center gap-3 md:gap-4">
+            <button
+              className="md:hidden p-2 -ml-2 text-muted hover:bg-black/5 rounded-lg transition-colors"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-semibold capitalize">{activeTab}</h2>
+              <p className="text-muted text-sm mt-1 hidden sm:block">Manage your workforce efficiently.</p>
+            </div>
           </div>
           {activeTab === 'employees' && (
             <button
